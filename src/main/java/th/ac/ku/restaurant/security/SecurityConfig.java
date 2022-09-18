@@ -1,6 +1,5 @@
 package th.ac.ku.restaurant.security;
 
-import th.ac.ku.restaurant.service.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import th.ac.ku.restaurant.service.UserDetailsServiceImp;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/signup",
-                        "/css/**", "/js/**").permitAll()
+                        "/css/**", "/js/**").permitAll()               .antMatchers("/menu/add")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/menu")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .anyRequest().authenticated()
 
                 .and()
